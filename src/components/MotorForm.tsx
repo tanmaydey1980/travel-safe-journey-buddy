@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useInsuranceContext } from "@/context/InsuranceContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Car, Calendar, Gauge, Landmark, Tools } from "lucide-react";
+import { Car, Calendar, Gauge, Landmark, Wrench } from "lucide-react";
 import { toast } from "sonner";
 
 const MotorForm = () => {
@@ -236,7 +235,7 @@ const MotorForm = () => {
 
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
-                <Tools className="h-4 w-4 text-primary" />
+                <Wrench className="h-4 w-4 text-primary" />
                 <h3 className="text-base font-medium">Vehicle Modifications</h3>
               </div>
               <div className="flex items-center space-x-2">
