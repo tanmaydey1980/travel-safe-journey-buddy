@@ -16,11 +16,11 @@ const Header = () => {
           </div>
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
-              Home
+              Travel Insurance
             </Link>
-            <a href="#" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
-              Coverage
-            </a>
+            <Link to="/motor" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
+              Motor Insurance
+            </Link>
             <a href="#" className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium">
               Claims
             </a>
@@ -28,12 +28,18 @@ const Header = () => {
               FAQ
             </a>
           </nav>
-          <div className="hidden md:flex items-center">
+          <div className="hidden md:flex items-center space-x-4">
             <Link 
               to="/" 
               className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
-              Get a Quote
+              Travel Quote
+            </Link>
+            <Link 
+              to="/motor" 
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-secondary hover:bg-secondary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
+            >
+              Motor Quote
             </Link>
           </div>
         </div>

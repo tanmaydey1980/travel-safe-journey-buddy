@@ -1,192 +1,330 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useInsuranceContext } from "@/context/InsuranceContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Check, Shield, ArrowLeft, Heart, Star, Plane } from "lucide-react";
+import { ArrowLeft, Shield, CheckCircle, AlertTriangle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 
-const insurancePlans = [
-  {
-    id: "basic",
-    name: "Basic Coverage",
-    price: 49.99,
-    features: [
-      "Medical expenses up to $50,000",
-      "Trip cancellation up to $1,000",
-      "Baggage loss up to $500",
-      "Travel delay coverage",
-    ],
-    coverage: {
-      medical: 50000,
-      cancellation: 1000,
-      baggage: 500,
-      delay: 200,
-    },
-  },
-  {
-    id: "standard",
-    name: "Standard Coverage",
-    price: 89.99,
-    features: [
-      "Medical expenses up to $100,000",
-      "Trip cancellation up to $3,000",
-      "Baggage loss up to $1,000",
-      "Travel delay coverage",
-      "Emergency evacuation",
-    ],
-    coverage: {
-      medical: 100000,
-      cancellation: 3000,
-      baggage: 1000,
-      delay: 500,
-    },
-    recommended: true,
-  },
-  {
-    id: "premium",
-    name: "Premium Coverage",
-    price: 149.99,
-    features: [
-      "Medical expenses up to $250,000",
-      "Trip cancellation up to $10,000",
-      "Baggage loss up to $2,500",
-      "Travel delay coverage",
-      "Emergency evacuation",
-      "Adventure activities coverage",
-      "24/7 Premium support",
-    ],
-    coverage: {
-      medical: 250000,
-      cancellation: 10000,
-      baggage: 2500,
-      delay: 1000,
-    },
-  },
-];
-
 const QuoteResults = () => {
-  const { travelData, selectedPlan, setSelectedPlan, setCurrentStep } = useInsuranceContext();
+  const { 
+    insuranceType,
+    travelData, 
+    motorData,
+    setSelectedPlan, 
+    setCurrentStep 
+  } = useInsuranceContext();
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [quotes, setQuotes] = useState<any[]>([]);
 
-  const handleSelectPlan = (plan) => {
+  // Generate mock quotes based on form data
+  useEffect(() => {
+    setIsLoading(true);
+
+    // Simulate API call delay
+    setTimeout(() => {
+      if (insuranceType === "travel") {
+        // Generate travel insurance quotes
+        const mockTravelQuotes = [
+          {
+            id: "basic",
+            name: "Basic Cover",
+            price: 49.99 * travelData.travelers,
+            recommended: false,
+            coverage: {
+              medical: 50000,
+              cancellation: 1500,
+              baggage: 1000,
+              delay: 250,
+            },
+            features: [
+              "Emergency medical coverage",
+              "Trip cancellation protection",
+              "Baggage protection",
+              "24/7 travel assistance",
+            ],
+          },
+          {
+            id: "standard",
+            name: "Standard Cover",
+            price: 79.99 * travelData.travelers,
+            recommended: true,
+            coverage: {
+              medical: 100000,
+              cancellation: 3000,
+              baggage: 2000,
+              delay: 500,
+            },
+            features: [
+              "Emergency medical coverage",
+              "Trip cancellation protection",
+              "Baggage protection",
+              "24/7 travel assistance",
+              "Emergency evacuation",
+              "Travel delay coverage",
+            ],
+          },
+          {
+            id: "premium",
+            name: "Premium Cover",
+            price: 119.99 * travelData.travelers,
+            recommended: false,
+            coverage: {
+              medical: 250000,
+              cancellation: 5000,
+              baggage: 3000,
+              delay: 1000,
+            },
+            features: [
+              "Emergency medical coverage",
+              "Trip cancellation protection",
+              "Baggage protection",
+              "24/7 travel assistance",
+              "Emergency evacuation",
+              "Travel delay coverage",
+              "Adventure activities coverage",
+              "Pre-existing medical conditions",
+              "Cancel for any reason",
+            ],
+          },
+        ];
+        setQuotes(mockTravelQuotes);
+      } else {
+        // Generate motor insurance quotes based on vehicle value and other factors
+        const vehicleAgeYears = new Date().getFullYear() - motorData.vehicleYear;
+        const basePrice = motorData.vehicleValue * 0.05; // 5% of vehicle value
+        
+        // Adjustments based on vehicle age
+        const ageAdjustment = vehicleAgeYears * 50;
+        
+        // Adjustment for mileage (higher mileage = higher risk)
+        const mileageAdjustment = (motorData.annualMileage / 5000) * 30;
+        
+        // Adjustment for parking location
+        const parkingAdjustment = 
+          motorData.parkingLocation === "garage" ? 0 :
+          motorData.parkingLocation === "driveway" ? 50 :
+          motorData.parkingLocation === "carport" ? 80 :
+          motorData.parkingLocation === "street" ? 150 : 200;
+        
+        // Adjustment for modifications
+        const modificationAdjustment = motorData.hasModifications ? 100 : 0;
+
+        const mockMotorQuotes = [
+          {
+            id: "third-party",
+            name: "Third Party Only",
+            price: Math.round((basePrice * 0.6 + ageAdjustment + mileageAdjustment + parkingAdjustment + modificationAdjustment) * 100) / 100,
+            recommended: false,
+            coverage: {
+              liability: 1000000,
+              collision: 0,
+              comprehensive: 0,
+              personalInjury: 10000,
+            },
+            features: [
+              "Third party liability",
+              "Legal expenses",
+              "Personal accident cover",
+              "24/7 claims helpline",
+            ],
+          },
+          {
+            id: "third-party-fire-theft",
+            name: "Third Party, Fire & Theft",
+            price: Math.round((basePrice * 0.8 + ageAdjustment + mileageAdjustment + parkingAdjustment + modificationAdjustment) * 100) / 100,
+            recommended: false,
+            coverage: {
+              liability: 1000000,
+              collision: 0,
+              comprehensive: motorData.vehicleValue * 0.5,
+              personalInjury: 15000,
+            },
+            features: [
+              "Third party liability",
+              "Fire damage protection",
+              "Theft protection",
+              "Legal expenses",
+              "Personal accident cover",
+              "24/7 claims helpline",
+            ],
+          },
+          {
+            id: "comprehensive",
+            name: "Comprehensive Cover",
+            price: Math.round((basePrice + ageAdjustment + mileageAdjustment + parkingAdjustment + modificationAdjustment) * 100) / 100,
+            recommended: true,
+            coverage: {
+              liability: 2000000,
+              collision: motorData.vehicleValue,
+              comprehensive: motorData.vehicleValue,
+              personalInjury: 25000,
+            },
+            features: [
+              "Accidental damage",
+              "Third party liability",
+              "Fire damage protection",
+              "Theft protection",
+              "Windscreen cover",
+              "Personal belongings cover",
+              "Courtesy car",
+              "Legal expenses",
+              "Personal accident cover",
+              "24/7 claims helpline",
+            ],
+          },
+        ];
+        setQuotes(mockMotorQuotes);
+      }
+      setIsLoading(false);
+    }, 1500);
+  }, [insuranceType, travelData, motorData]);
+
+  const handleSelectPlan = (plan: any) => {
     setSelectedPlan(plan);
     setCurrentStep("details");
-    toast.success(`${plan.name} selected!`);
+    toast.success(`Selected ${plan.name} plan`);
   };
 
   const handleBack = () => {
     setCurrentStep("form");
   };
 
-  // Calculate price based on number of travelers and trip length
-  const calculateAdjustedPrice = (basePrice) => {
-    const tripLength = Math.max(
-      1,
-      Math.ceil(
-        (new Date(travelData.returnDate).getTime() - new Date(travelData.departureDate).getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    );
+  const formatCoverage = (type: string, value: number) => {
+    if (!value) return null;
     
-    const activityMultiplier = 1 + travelData.activities.length * 0.05;
-    
-    // Age factor calculation
-    let ageFactor = 1;
-    if (travelData.travelerAges.length > 0) {
-      const avgAge = travelData.travelerAges.reduce((sum, age) => sum + age, 0) / travelData.travelerAges.length;
-      if (avgAge < 18) ageFactor = 0.8;
-      else if (avgAge > 65) ageFactor = 1.5;
+    switch(type) {
+      case "medical":
+      case "cancellation":
+      case "baggage":
+      case "delay":
+      case "liability":
+      case "collision":
+      case "comprehensive":
+      case "personalInjury":
+        return `$${value.toLocaleString()}`;
+      default:
+        return value;
     }
-    
-    return (basePrice * travelData.travelers * activityMultiplier * ageFactor * Math.min(tripLength * 0.9, 30)).toFixed(2);
   };
 
+  const coverageLabels = insuranceType === "travel" 
+    ? {
+        medical: "Medical Coverage",
+        cancellation: "Cancellation Coverage",
+        baggage: "Baggage Coverage",
+        delay: "Delay Coverage"
+      }
+    : {
+        liability: "Third Party Liability",
+        collision: "Collision Damage",
+        comprehensive: "Comprehensive Coverage",
+        personalInjury: "Personal Injury Protection"
+      };
+
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      <div className="mb-6 flex items-center">
-        <Button variant="ghost" onClick={handleBack} className="p-0 mr-2">
-          <ArrowLeft className="h-4 w-4 mr-1" /> Back
-        </Button>
-        <h2 className="text-2xl font-bold">Choose Your Coverage Plan</h2>
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center">
+          <Button variant="ghost" onClick={handleBack} className="p-0 mr-2">
+            <ArrowLeft className="h-4 w-4 mr-1" /> Back
+          </Button>
+          <h2 className="text-2xl font-bold">Available Plans</h2>
+        </div>
+        <div>
+          <Badge variant="outline" className="text-sm">
+            {insuranceType === "travel" ? (
+              <>
+                {travelData.travelers} {travelData.travelers === 1 ? "Traveler" : "Travelers"} • {travelData.destination}
+              </>
+            ) : (
+              <>
+                {motorData.vehicleMake} {motorData.vehicleModel} • {motorData.vehicleYear}
+              </>
+            )}
+          </Badge>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {insurancePlans.map((plan) => {
-          const adjustedPrice = calculateAdjustedPrice(plan.price);
-          
-          return (
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+          <p className="mt-4 text-lg text-muted-foreground">Generating your personalized quotes...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {quotes.map((plan) => (
             <Card 
               key={plan.id} 
-              className={`relative ${plan.recommended ? 'border-primary shadow-lg' : ''}`}
+              className={`relative ${plan.recommended ? 'border-primary' : ''}`}
             >
               {plan.recommended && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-xs font-bold">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-white text-xs font-medium py-1 px-3 rounded-full">
                   Recommended
                 </div>
               )}
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  {plan.id === "basic" && <Shield className="h-5 w-5 mr-2 text-blue-500" />}
-                  {plan.id === "standard" && <Star className="h-5 w-5 mr-2 text-amber-500" />}
-                  {plan.id === "premium" && <Plane className="h-5 w-5 mr-2 text-purple-500" />}
-                  {plan.name}
+                <CardTitle className="flex items-center justify-between">
+                  <span>{plan.name}</span>
+                  <Shield className={`h-5 w-5 ${plan.recommended ? 'text-primary' : 'text-muted-foreground'}`} />
                 </CardTitle>
                 <CardDescription>
-                  <div className="mt-2">
-                    <span className="text-3xl font-bold">${adjustedPrice}</span>
-                    <span className="text-muted-foreground"> total</span>
-                  </div>
+                  <span className="text-2xl font-bold">${plan.price.toFixed(2)}</span>
+                  <span className="text-muted-foreground"> / year</span>
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <Check className="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+              <CardContent className="space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">Coverage Details</h4>
+                  <dl className="text-sm space-y-1">
+                    {Object.entries(plan.coverage).map(([key, value]: [string, any]) => 
+                      value ? (
+                        <div key={key} className="flex justify-between">
+                          <dt>{coverageLabels[key as keyof typeof coverageLabels]}</dt>
+                          <dd className="font-medium">{formatCoverage(key, value)}</dd>
+                        </div>
+                      ) : null
+                    )}
+                  </dl>
+                </div>
+                
+                <Separator />
+                
+                <div>
+                  <h4 className="font-medium mb-2">Features</h4>
+                  <ul className="text-sm space-y-2">
+                    {plan.features.map((feature: string, index: number) => (
+                      <li key={index} className="flex items-start">
+                        <CheckCircle className="h-4 w-4 text-primary shrink-0 mr-2 mt-0.5" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                {plan.id === "third-party" && insuranceType === "motor" && (
+                  <div className="flex items-start bg-amber-50 p-3 rounded-md text-amber-800 text-sm">
+                    <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5 mr-2" />
+                    <p>This plan doesn't cover damage to your own vehicle.</p>
+                  </div>
+                )}
               </CardContent>
               <CardFooter>
                 <Button 
-                  className={`w-full ${plan.recommended ? 'bg-primary' : ''}`}
-                  onClick={() => handleSelectPlan({ ...plan, price: parseFloat(adjustedPrice) })}
+                  onClick={() => handleSelectPlan(plan)} 
+                  className="w-full" 
+                  variant={plan.recommended ? "default" : "outline"}
                 >
                   Select Plan
                 </Button>
               </CardFooter>
             </Card>
-          );
-        })}
-      </div>
-
-      <div className="mt-10 bg-muted p-6 rounded-lg">
-        <h3 className="text-lg font-medium mb-3 flex items-center">
-          <Heart className="h-5 w-5 mr-2 text-red-500" />
-          Why Choose SafeJourney Insurance?
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-background p-4 rounded-md">
-            <h4 className="font-medium mb-2">24/7 Global Assistance</h4>
-            <p className="text-sm text-muted-foreground">
-              Our support team is available 24/7 to assist you with any emergency during your travels.
-            </p>
-          </div>
-          <div className="bg-background p-4 rounded-md">
-            <h4 className="font-medium mb-2">Easy Claims Process</h4>
-            <p className="text-sm text-muted-foreground">
-              Submit claims online and get reimbursed quickly with our streamlined claims process.
-            </p>
-          </div>
-          <div className="bg-background p-4 rounded-md">
-            <h4 className="font-medium mb-2">Trusted by Millions</h4>
-            <p className="text-sm text-muted-foreground">
-              Join the millions of travelers who trust SafeJourney for their travel protection needs.
-            </p>
-          </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 };

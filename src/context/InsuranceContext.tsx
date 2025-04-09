@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 type InsuranceStep = "form" | "quote" | "details" | "payment" | "confirmation";
+type InsuranceType = "travel" | "motor";
 
 export interface TravelFormData {
   destination: string;
@@ -10,6 +11,18 @@ export interface TravelFormData {
   travelers: number;
   travelerAges: number[];
   activities: string[];
+}
+
+export interface MotorFormData {
+  vehicleMake: string;
+  vehicleModel: string;
+  vehicleYear: number;
+  vehicleRegistration: string;
+  vehicleValue: number;
+  annualMileage: number;
+  parkingLocation: string;
+  hasModifications: boolean;
+  modifications: string;
 }
 
 export interface InsuredPerson {
@@ -23,6 +36,9 @@ export interface InsuredPerson {
   zipCode: string;
   dateOfBirth: string;
   passportNumber: string;
+  drivingLicenseNumber?: string;
+  drivingExperience?: number;
+  previousClaims?: number;
 }
 
 export interface PaymentDetails {
@@ -37,18 +53,26 @@ export interface SelectedPlan {
   name: string;
   price: number;
   coverage: {
-    medical: number;
-    cancellation: number;
-    baggage: number;
-    delay: number;
+    medical?: number;
+    cancellation?: number;
+    baggage?: number;
+    delay?: number;
+    liability?: number;
+    collision?: number;
+    comprehensive?: number;
+    personalInjury?: number;
   };
 }
 
 interface InsuranceContextType {
+  insuranceType: InsuranceType;
+  setInsuranceType: (type: InsuranceType) => void;
   currentStep: InsuranceStep;
   setCurrentStep: (step: InsuranceStep) => void;
   travelData: TravelFormData;
   setTravelData: (data: TravelFormData) => void;
+  motorData: MotorFormData;
+  setMotorData: (data: MotorFormData) => void;
   selectedPlan: SelectedPlan | null;
   setSelectedPlan: (plan: SelectedPlan | null) => void;
   insuredDetails: InsuredPerson;
@@ -68,6 +92,18 @@ const defaultTravelData: TravelFormData = {
   activities: [],
 };
 
+const defaultMotorData: MotorFormData = {
+  vehicleMake: "",
+  vehicleModel: "",
+  vehicleYear: new Date().getFullYear(),
+  vehicleRegistration: "",
+  vehicleValue: 15000,
+  annualMileage: 10000,
+  parkingLocation: "garage",
+  hasModifications: false,
+  modifications: "",
+};
+
 const defaultInsuredDetails: InsuredPerson = {
   firstName: "",
   lastName: "",
@@ -79,6 +115,9 @@ const defaultInsuredDetails: InsuredPerson = {
   zipCode: "",
   dateOfBirth: "",
   passportNumber: "",
+  drivingLicenseNumber: "",
+  drivingExperience: 5,
+  previousClaims: 0,
 };
 
 const defaultPaymentDetails: PaymentDetails = {
@@ -99,18 +138,24 @@ export const useInsuranceContext = () => {
 };
 
 export const InsuranceProvider = ({ children }: { children: ReactNode }) => {
+  const [insuranceType, setInsuranceType] = useState<InsuranceType>("travel");
   const [currentStep, setCurrentStep] = useState<InsuranceStep>("form");
   const [travelData, setTravelData] = useState<TravelFormData>(defaultTravelData);
+  const [motorData, setMotorData] = useState<MotorFormData>(defaultMotorData);
   const [selectedPlan, setSelectedPlan] = useState<SelectedPlan | null>(null);
   const [insuredDetails, setInsuredDetails] = useState<InsuredPerson>(defaultInsuredDetails);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>(defaultPaymentDetails);
   const [policyNumber, setPolicyNumber] = useState<string>("");
 
   const value = {
+    insuranceType,
+    setInsuranceType,
     currentStep,
     setCurrentStep,
     travelData,
     setTravelData,
+    motorData,
+    setMotorData,
     selectedPlan,
     setSelectedPlan,
     insuredDetails,
