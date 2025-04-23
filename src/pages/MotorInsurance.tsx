@@ -37,22 +37,26 @@ const MotorInsurance = () => {
             <div className="absolute inset-0 bg-black/50" />
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">Protect Your Vehicle</h1>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                  <span data-gpt-edit="motor.hero-title">Protect Your Vehicle</span>
+                </h1>
                 <p className="text-xl mb-6">
-                  Get comprehensive motor insurance coverage for your car. Protection against accidents, theft, damage, and more.
+                  <span data-gpt-edit="motor.hero-desc">
+                    Get comprehensive motor insurance coverage for your car. Protection against accidents, theft, damage, and more.
+                  </span>
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>24/7 Roadside Assistance</span>
+                    <span data-gpt-edit="motor.hero-feature-1">24/7 Roadside Assistance</span>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>Comprehensive Coverage</span>
+                    <span data-gpt-edit="motor.hero-feature-2">Comprehensive Coverage</span>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>Fast Claims Process</span>
+                    <span data-gpt-edit="motor.hero-feature-3">Fast Claims Process</span>
                   </div>
                 </div>
               </div>
@@ -76,9 +80,9 @@ const MotorInsurance = () => {
                     className={`step ${isActive ? 'step-active' : ''} ${isCompleted ? 'step-completed' : ''}`}
                   >
                     <div className="step-circle">
-                      {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                      {isCompleted ? <CheckCircle className="h-4 w-4" /> : <span data-gpt-edit={`motor.step-${index+1}-num`}>{index + 1}</span>}
                     </div>
-                    <span className="text-sm">{step.label}</span>
+                    <span className="text-sm" data-gpt-edit={`motor.step-${index+1}-label`}>{step.label}</span>
                   </div>
                 );
               })}

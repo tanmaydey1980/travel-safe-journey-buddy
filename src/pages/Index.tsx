@@ -39,34 +39,40 @@ const Index = () => {
             <div className="absolute inset-0 bg-black/50" />
             <div className="max-w-7xl mx-auto relative z-10">
               <div className="max-w-2xl mb-12">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4">Insurance for Your Peace of Mind</h1>
+                <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                  <span data-gpt-edit="index.hero-title">Insurance for Your Peace of Mind</span>
+                </h1>
                 <p className="text-xl mb-6">
-                  Comprehensive protection for your travels and vehicles. Choose the right coverage for your needs.
+                  <span data-gpt-edit="index.hero-desc">
+                    Comprehensive protection for your travels and vehicles. Choose the right coverage for your needs.
+                  </span>
                 </p>
                 <div className="flex flex-wrap gap-4 mb-8">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>24/7 Customer Support</span>
+                    <span data-gpt-edit="index.hero-feature-1">24/7 Customer Support</span>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>Global Coverage</span>
+                    <span data-gpt-edit="index.hero-feature-2">Global Coverage</span>
                   </div>
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
-                    <span>Fast Claims Process</span>
+                    <span data-gpt-edit="index.hero-feature-3">Fast Claims Process</span>
                   </div>
                 </div>
                 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
                     <Link to="/" className="flex items-center">
-                      <Plane className="mr-2 h-5 w-5" /> Travel Insurance
+                      <Plane className="mr-2 h-5 w-5" /> 
+                      <span data-gpt-edit="index.btn-travel">Travel Insurance</span>
                     </Link>
                   </Button>
                   <Button size="lg" asChild className="bg-secondary hover:bg-secondary/90">
                     <Link to="/motor" className="flex items-center">
-                      <Car className="mr-2 h-5 w-5" /> Motor Insurance
+                      <Car className="mr-2 h-5 w-5" /> 
+                      <span data-gpt-edit="index.btn-motor">Motor Insurance</span>
                     </Link>
                   </Button>
                 </div>
@@ -91,9 +97,9 @@ const Index = () => {
                     className={`step ${isActive ? 'step-active' : ''} ${isCompleted ? 'step-completed' : ''}`}
                   >
                     <div className="step-circle">
-                      {isCompleted ? <CheckCircle className="h-4 w-4" /> : index + 1}
+                      {isCompleted ? <CheckCircle className="h-4 w-4" /> : <span data-gpt-edit={`index.step-${index+1}-num`}>{index + 1}</span>}
                     </div>
-                    <span className="text-sm">{step.label}</span>
+                    <span className="text-sm" data-gpt-edit={`index.step-${index+1}-label`}>{step.label}</span>
                   </div>
                 );
               })}
