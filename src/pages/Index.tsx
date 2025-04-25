@@ -8,7 +8,7 @@ import QuoteResults from "@/components/QuoteResults";
 import InsuredDetails from "@/components/InsuredDetails";
 import Payment from "@/components/Payment";
 import PolicyConfirmation from "@/components/PolicyConfirmation";
-import { CheckCircle, Car, Plane } from "lucide-react";
+import { CheckCircle, Car, Plane, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -62,7 +62,7 @@ const Index = () => {
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
                   <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
                     <Link to="/" className="flex items-center">
                       <Plane className="mr-2 h-5 w-5" /> 
@@ -73,6 +73,12 @@ const Index = () => {
                     <Link to="/motor" className="flex items-center">
                       <Car className="mr-2 h-5 w-5" /> 
                       <span data-gpt-edit="index.btn-motor">Motor Insurance</span>
+                    </Link>
+                  </Button>
+                  <Button size="lg" asChild variant="outline" className="bg-white/10">
+                    <Link to="/store" className="flex items-center">
+                      <ShoppingCart className="mr-2 h-5 w-5" /> 
+                      <span data-gpt-edit="index.btn-store">Visit Our Store</span>
                     </Link>
                   </Button>
                 </div>

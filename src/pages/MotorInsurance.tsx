@@ -8,7 +8,9 @@ import QuoteResults from "@/components/QuoteResults";
 import InsuredDetails from "@/components/InsuredDetails";
 import Payment from "@/components/Payment";
 import PolicyConfirmation from "@/components/PolicyConfirmation";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const MotorInsurance = () => {
   const { currentStep, setInsuranceType } = useInsuranceContext();
@@ -45,7 +47,7 @@ const MotorInsurance = () => {
                     Get comprehensive motor insurance coverage for your car. Protection against accidents, theft, damage, and more.
                   </span>
                 </p>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-4 mb-8">
                   <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 flex items-center">
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
                     <span data-gpt-edit="motor.hero-feature-1">24/7 Roadside Assistance</span>
@@ -58,6 +60,14 @@ const MotorInsurance = () => {
                     <CheckCircle className="h-6 w-6 text-primary mr-2" />
                     <span data-gpt-edit="motor.hero-feature-3">Fast Claims Process</span>
                   </div>
+                </div>
+                <div className="flex items-center">
+                  <Button asChild variant="outline" className="bg-white/10">
+                    <Link to="/store" className="flex items-center">
+                      <ShoppingCart className="mr-2 h-5 w-5" /> 
+                      <span data-gpt-edit="motor.btn-store">Visit Our Store</span>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </div>

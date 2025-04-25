@@ -5,9 +5,17 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { InsuranceProvider } from "./context/InsuranceContext";
+import { CommerceProvider } from "./context/CommerceContext";
 import Index from "./pages/Index";
 import MotorInsurance from "./pages/MotorInsurance";
 import NotFound from "./pages/NotFound";
+import CmsLogin from "./pages/cms/CmsLogin";
+import CmsProducts from "./pages/cms/CmsProducts";
+import CmsDiscounts from "./pages/cms/CmsDiscounts";
+import CmsBundles from "./pages/cms/CmsBundles";
+import StoreFront from "./pages/store/StoreFront";
+import ProductDetail from "./pages/store/ProductDetail";
+import Cart from "./pages/store/Cart";
 
 const queryClient = new QueryClient();
 
@@ -16,15 +24,29 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <InsuranceProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/motor" element={<MotorInsurance />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </InsuranceProvider>
+      <CommerceProvider>
+        <InsuranceProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/motor" element={<MotorInsurance />} />
+              
+              {/* CMS Routes */}
+              <Route path="/cms/login" element={<CmsLogin />} />
+              <Route path="/cms/products" element={<CmsProducts />} />
+              <Route path="/cms/discounts" element={<CmsDiscounts />} />
+              <Route path="/cms/bundles" element={<CmsBundles />} />
+              
+              {/* Store Routes */}
+              <Route path="/store" element={<StoreFront />} />
+              <Route path="/store/product/:id" element={<ProductDetail />} />
+              <Route path="/store/cart" element={<Cart />} />
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </InsuranceProvider>
+      </CommerceProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
