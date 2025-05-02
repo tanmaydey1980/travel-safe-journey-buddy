@@ -16,6 +16,11 @@ import CmsBundles from "./pages/cms/CmsBundles";
 import StoreFront from "./pages/store/StoreFront";
 import ProductDetail from "./pages/store/ProductDetail";
 import Cart from "./pages/store/Cart";
+import HomeInsurance from "./pages/HomeInsurance";
+import HomeForm from "./pages/home/HomeForm";
+import HomeQuote from "./pages/home/HomeQuote";
+import HomeCheckout from "./pages/home/HomeCheckout";
+import HomeConfirmation from "./pages/home/HomeConfirmation";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +35,11 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/motor" element={<MotorInsurance />} />
+              <Route path="/home" element={<HomeInsurance />} />
+              <Route path="/home/form" element={<HomeForm />} />
+              <Route path="/home/quote" element={<HomeQuote />} />
+              <Route path="/home/checkout" element={<HomeCheckout />} />
+              <Route path="/home/confirmation" element={<HomeConfirmation />} />
               
               {/* CMS Routes */}
               <Route path="/cms/login" element={<CmsLogin />} />
