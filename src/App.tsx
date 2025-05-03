@@ -13,6 +13,7 @@ import CmsLogin from "./pages/cms/CmsLogin";
 import CmsProducts from "./pages/cms/CmsProducts";
 import CmsDiscounts from "./pages/cms/CmsDiscounts";
 import CmsBundles from "./pages/cms/CmsBundles";
+import CmsSocialDeploy from "./pages/cms/CmsSocialDeploy";
 import StoreFront from "./pages/store/StoreFront";
 import ProductDetail from "./pages/store/ProductDetail";
 import Cart from "./pages/store/Cart";
@@ -48,6 +49,7 @@ const App = () => (
               <Route path="/cms/products" element={<CmsProducts />} />
               <Route path="/cms/discounts" element={<CmsDiscounts />} />
               <Route path="/cms/bundles" element={<CmsBundles />} />
+              <Route path="/cms/social-deploy" element={<CmsSocialDeploy />} />
               
               {/* Store Routes */}
               <Route path="/store" element={<StoreFront />} />

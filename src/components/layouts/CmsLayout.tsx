@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Package, Tag, ShoppingBasket } from "lucide-react";
+import { Package, Tag, ShoppingBasket, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface CmsLayoutProps {
@@ -16,6 +16,7 @@ const CmsLayout: React.FC<CmsLayoutProps> = ({ children, title }) => {
     { path: "/cms/products", label: "Products", icon: <Package className="mr-2" /> },
     { path: "/cms/bundles", label: "Bundles", icon: <ShoppingBasket className="mr-2" /> },
     { path: "/cms/discounts", label: "Discounts", icon: <Tag className="mr-2" /> },
+    { path: "/cms/social-deploy", label: "Social Deploy", icon: <Share2 className="mr-2" /> },
   ];
 
   return (
