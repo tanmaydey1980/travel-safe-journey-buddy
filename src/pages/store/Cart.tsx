@@ -8,7 +8,7 @@ import { Product, Bundle } from '@/context/CommerceContext';
 import StoreLayout from '@/components/layouts/StoreLayout';
 
 const Cart = () => {
-  const { cartItems, removeFromCart, products, bundles, getProductById, getBundleById } = useCommerce();
+  const { cartItems, removeFromCart, getProductById, getBundleById } = useCommerce();
 
   // Helper function to determine if an item is a Bundle
   const isBundle = (item: Product | Bundle): item is Bundle => {
@@ -37,8 +37,8 @@ const Cart = () => {
       }
       // If it's a product
       const productPrice = item.price || 0;
-      const discount = item.discountPercentage || 0;
-      return total + (productPrice * (1 - discount / 100));
+      // Products don't have discountPercentage, so we use 0
+      return total + productPrice;
     }, 0);
   };
 
@@ -100,19 +100,8 @@ const Cart = () => {
                             )}
                           </>
                         ) : (
-                          <>
-                            {item.discountPercentage ? (
-                              <div className="flex items-center gap-2">
-                                <span className="line-through text-muted-foreground">${item.price}</span>
-                                <span className="text-lg font-bold">${(item.price * (1 - item.discountPercentage / 100)).toFixed(2)}</span>
-                                <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
-                                  {item.discountPercentage}% OFF
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="text-lg font-bold">${item.price}</span>
-                            )}
-                          </>
+                          // Product display - no discountPercentage for Products
+                          <span className="text-lg font-bold">${item.price.toFixed(2)}</span>
                         )}
                       </div>
                     </div>
