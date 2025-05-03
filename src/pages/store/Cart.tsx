@@ -8,16 +8,28 @@ import { Product, Bundle } from '@/context/CommerceContext';
 import StoreLayout from '@/components/layouts/StoreLayout';
 
 const Cart = () => {
-  const { cartItems, removeFromCart } = useCommerce();
+  const { cartItems, removeFromCart, products, bundles, getProductById, getBundleById } = useCommerce();
 
   // Helper function to determine if an item is a Bundle
   const isBundle = (item: Product | Bundle): item is Bundle => {
     return 'productIds' in item;
   };
+  
+  // Get actual product or bundle based on cart item
+  const getItemDetails = (cartItem: any) => {
+    if (cartItem.isBundle) {
+      return getBundleById(cartItem.productId);
+    } else {
+      return getProductById(cartItem.productId);
+    }
+  };
 
   // Calculate the total price for all items in cart
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => {
+    return cartItems.reduce((total, cartItem) => {
+      const item = getItemDetails(cartItem);
+      if (!item) return total;
+      
       // If it's a bundle
       if (isBundle(item)) {
         const bundlePrice = item.discountPercentage || 0;
@@ -43,66 +55,71 @@ const Cart = () => {
           </Card>
         ) : (
           <>
-            {cartItems.map((item, index) => (
-              <Card key={index} className="mb-4">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex justify-between items-center">
-                    <span>{item.name}</span>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-destructive"
-                      onClick={() => removeFromCart(index)}
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </Button>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-2">{item.description}</p>
-                  
-                  {isBundle(item) ? (
-                    <div className="bg-muted p-2 rounded-md mt-2">
-                      <p className="text-sm font-medium">Bundle contains multiple products</p>
+            {cartItems.map((cartItem, index) => {
+              const item = getItemDetails(cartItem);
+              if (!item) return null;
+              
+              return (
+                <Card key={index} className="mb-4">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="flex justify-between items-center">
+                      <span>{item.name}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-destructive"
+                        onClick={() => removeFromCart(cartItem.id)}
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </Button>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-2">{item.description}</p>
+                    
+                    {isBundle(item) ? (
+                      <div className="bg-muted p-2 rounded-md mt-2">
+                        <p className="text-sm font-medium">Bundle contains multiple products</p>
+                      </div>
+                    ) : null}
+                    
+                    <div className="mt-2 flex justify-between items-center">
+                      <div>
+                        {isBundle(item) ? (
+                          <>
+                            {item.discountPercentage ? (
+                              <div className="flex items-center gap-2">
+                                <span className="line-through text-muted-foreground">Bundle</span>
+                                <span className="text-lg font-bold">${item.discountPercentage.toFixed(2)}</span>
+                                <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
+                                  Bundle Discount
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold">Bundle</span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {item.discountPercentage ? (
+                              <div className="flex items-center gap-2">
+                                <span className="line-through text-muted-foreground">${item.price}</span>
+                                <span className="text-lg font-bold">${(item.price * (1 - item.discountPercentage / 100)).toFixed(2)}</span>
+                                <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
+                                  {item.discountPercentage}% OFF
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="text-lg font-bold">${item.price}</span>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
-                  ) : null}
-                  
-                  <div className="mt-2 flex justify-between items-center">
-                    <div>
-                      {isBundle(item) ? (
-                        <>
-                          {item.discountPercentage ? (
-                            <div className="flex items-center gap-2">
-                              <span className="line-through text-muted-foreground">Bundle</span>
-                              <span className="text-lg font-bold">${item.discountPercentage.toFixed(2)}</span>
-                              <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
-                                Bundle Discount
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-lg font-bold">Bundle</span>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          {item.discountPercentage ? (
-                            <div className="flex items-center gap-2">
-                              <span className="line-through text-muted-foreground">${item.price}</span>
-                              <span className="text-lg font-bold">${(item.price * (1 - item.discountPercentage / 100)).toFixed(2)}</span>
-                              <span className="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">
-                                {item.discountPercentage}% OFF
-                              </span>
-                            </div>
-                          ) : (
-                            <span className="text-lg font-bold">${item.price}</span>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
             
             <Card className="mt-6">
               <CardContent className="p-6">
