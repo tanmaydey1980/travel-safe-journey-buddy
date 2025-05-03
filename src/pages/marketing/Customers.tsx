@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, Download, Filter, X } from 'lucide-react';
+import { Search, Download, Filter, X, Tags } from 'lucide-react';
+import AddCustomerDialog from '@/components/marketing/AddCustomerDialog';
+import ManageTagsDialog from '@/components/marketing/ManageTagsDialog';
+import CustomerTagsDialog from '@/components/marketing/CustomerTagsDialog';
 
 const CustomersPage = () => {
   const { customers, filteredCustomers, filterCustomers } = useMarketing();
@@ -67,6 +70,7 @@ const CustomersPage = () => {
           <div className="flex items-center justify-between">
             <CardTitle>Customers ({filteredCustomers.length})</CardTitle>
             <div className="flex gap-2">
+              <ManageTagsDialog />
               <Button
                 variant="outline"
                 size="sm"
@@ -83,6 +87,7 @@ const CustomersPage = () => {
                 <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
+              <AddCustomerDialog />
             </div>
           </div>
         </CardHeader>
@@ -207,6 +212,7 @@ const CustomersPage = () => {
                 <TableHead>Customer Since</TableHead>
                 <TableHead>Total Spent</TableHead>
                 <TableHead>Tags</TableHead>
+                <TableHead className="w-[80px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -230,11 +236,21 @@ const CustomersPage = () => {
                         ))}
                       </div>
                     </TableCell>
+                    <TableCell>
+                      <CustomerTagsDialog 
+                        customer={customer} 
+                        trigger={
+                          <Button variant="ghost" size="sm">
+                            <Tags className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     No customers found matching your filters.
                   </TableCell>
                 </TableRow>

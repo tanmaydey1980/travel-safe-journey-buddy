@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Customer, Segment, Campaign, Template } from "@/types/marketing";
 import { generateDummyCustomers, generateDummySegments, generateDummyCampaigns, generateDummyTemplates } from "@/lib/dummyData";
@@ -12,6 +11,7 @@ interface MarketingContextType {
   selectedSegment: Segment | null;
   selectedCampaign: Campaign | null;
   selectedTemplate: Template | null;
+  tags: string[];  // New state for available tags
   filterCustomers: (filters: Record<string, any>) => void;
   createSegment: (segment: Omit<Segment, "id" | "createdAt" | "updatedAt" | "customerCount">) => void;
   updateSegment: (id: string, segment: Partial<Segment>) => void;
@@ -23,6 +23,12 @@ interface MarketingContextType {
   selectCampaign: (id: string | null) => void;
   selectTemplate: (id: string | null) => void;
   getCustomersInSegment: (segmentId: string) => Customer[];
+  addCustomer: (customer: Omit<Customer, "id">) => void;
+  updateCustomer: (id: string, customerData: Partial<Customer>) => void;
+  deleteCustomer: (id: string) => void;
+  addTag: (tag: string) => void;
+  addTagToCustomer: (customerId: string, tag: string) => void;
+  removeTagFromCustomer: (customerId: string, tag: string) => void;
 }
 
 const MarketingContext = createContext<MarketingContextType | undefined>(undefined);
@@ -36,6 +42,7 @@ export const MarketingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [selectedSegment, setSelectedSegment] = useState<Segment | null>(null);
   const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     // Load dummy data
@@ -49,6 +56,10 @@ export const MarketingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setCampaigns(dummyCampaigns);
     setTemplates(dummyTemplates);
     setFilteredCustomers(dummyCustomers);
+    
+    // Extract all unique tags from customers
+    const allTags = Array.from(new Set(dummyCustomers.flatMap(c => c.tags)));
+    setTags(allTags);
   }, []);
 
   const filterCustomers = (filters: Record<string, any>) => {
@@ -260,6 +271,86 @@ export const MarketingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
   };
 
+  // New function to add a customer
+  const addCustomer = (customer: Omit<Customer, "id">) => {
+    const newCustomer: Customer = {
+      ...customer,
+      id: `customer_${Date.now()}`,
+    };
+    
+    setCustomers([...customers, newCustomer]);
+    setFilteredCustomers([...filteredCustomers, newCustomer]);
+    
+    // Add any new tags
+    const newTags = customer.tags.filter(tag => !tags.includes(tag));
+    if (newTags.length > 0) {
+      setTags([...tags, ...newTags]);
+    }
+  };
+
+  // Update customer data
+  const updateCustomer = (id: string, customerData: Partial<Customer>) => {
+    const updatedCustomers = customers.map(c => 
+      c.id === id ? { ...c, ...customerData } : c
+    );
+    
+    setCustomers(updatedCustomers);
+    
+    // Update filtered customers if the updated customer is part of it
+    if (filteredCustomers.some(c => c.id === id)) {
+      setFilteredCustomers(filteredCustomers.map(c => 
+        c.id === id ? { ...c, ...customerData } : c
+      ));
+    }
+
+    // Add any new tags
+    if (customerData.tags) {
+      const newTags = customerData.tags.filter(tag => !tags.includes(tag));
+      if (newTags.length > 0) {
+        setTags([...tags, ...newTags]);
+      }
+    }
+  };
+
+  // Delete a customer
+  const deleteCustomer = (id: string) => {
+    setCustomers(customers.filter(c => c.id !== id));
+    setFilteredCustomers(filteredCustomers.filter(c => c.id !== id));
+  };
+
+  // Add a new tag to available tags
+  const addTag = (tag: string) => {
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+  };
+
+  // Add a tag to a specific customer
+  const addTagToCustomer = (customerId: string, tag: string) => {
+    // Add to tags list if it's a new tag
+    if (!tags.includes(tag)) {
+      setTags([...tags, tag]);
+    }
+
+    // Add tag to customer
+    updateCustomer(customerId, {
+      tags: [
+        ...customers.find(c => c.id === customerId)?.tags || [],
+        tag
+      ]
+    });
+  };
+
+  // Remove a tag from a specific customer
+  const removeTagFromCustomer = (customerId: string, tag: string) => {
+    const customer = customers.find(c => c.id === customerId);
+    if (customer) {
+      updateCustomer(customerId, {
+        tags: customer.tags.filter(t => t !== tag)
+      });
+    }
+  };
+
   return (
     <MarketingContext.Provider
       value={{
@@ -271,6 +362,7 @@ export const MarketingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         selectedSegment,
         selectedCampaign,
         selectedTemplate,
+        tags,
         filterCustomers,
         createSegment,
         updateSegment,
@@ -282,6 +374,12 @@ export const MarketingProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         selectCampaign,
         selectTemplate,
         getCustomersInSegment,
+        addCustomer,
+        updateCustomer,
+        deleteCustomer,
+        addTag,
+        addTagToCustomer,
+        removeTagFromCustomer,
       }}
     >
       {children}
