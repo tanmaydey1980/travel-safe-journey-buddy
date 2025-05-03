@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Shield, Umbrella, FileText } from "lucide-react";
+import { Home, Shield, Umbrella, FileText, Share2 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HomeInsurance = () => {
   const navigate = useNavigate();
@@ -73,9 +74,20 @@ const HomeInsurance = () => {
                 </div>
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex flex-col gap-4">
               <Button size="lg" onClick={handleGetStarted} className="w-full">
                 Get Your Quote Now
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                asChild 
+                className="w-full flex items-center justify-center"
+              >
+                <Link to="/social-demo">
+                  <Share2 className="h-5 w-5 mr-2" />
+                  Try Our Social Media Demo
+                </Link>
               </Button>
             </CardFooter>
           </Card>

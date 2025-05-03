@@ -21,6 +21,7 @@ import HomeForm from "./pages/home/HomeForm";
 import HomeQuote from "./pages/home/HomeQuote";
 import HomeCheckout from "./pages/home/HomeCheckout";
 import HomeConfirmation from "./pages/home/HomeConfirmation";
+import SocialDemoApp from "./pages/SocialDemoApp";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
               <Route path="/home/quote" element={<HomeQuote />} />
               <Route path="/home/checkout" element={<HomeCheckout />} />
               <Route path="/home/confirmation" element={<HomeConfirmation />} />
+              <Route path="/social-demo" element={<SocialDemoApp />} />
               
               {/* CMS Routes */}
               <Route path="/cms/login" element={<CmsLogin />} />
