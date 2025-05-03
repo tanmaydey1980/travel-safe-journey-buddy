@@ -26,6 +26,7 @@ import HomeConfirmation from "./pages/home/HomeConfirmation";
 import SocialDemoApp from "./pages/SocialDemoApp";
 
 // Marketing app pages
+import MarketingLanding from "./pages/marketing/index";
 import CustomersPage from "./pages/marketing/Customers";
 import SegmentsPage from "./pages/marketing/Segments";
 import CampaignsPage from "./pages/marketing/Campaigns";
@@ -66,6 +67,7 @@ const App = () => (
                 <Route path="/store/cart" element={<Cart />} />
                 
                 {/* Marketing App Routes */}
+                <Route path="/marketing" element={<MarketingLanding />} />
                 <Route path="/marketing/customers" element={<CustomersPage />} />
                 <Route path="/marketing/segments" element={<SegmentsPage />} />
                 <Route path="/marketing/campaigns" element={<CampaignsPage />} />

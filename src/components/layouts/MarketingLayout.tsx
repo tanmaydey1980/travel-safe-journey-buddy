@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Users, Filter, Send, LineChart, Settings } from "lucide-react";
+import { Users, Filter, Send, LineChart, Settings, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface MarketingLayoutProps {
@@ -13,6 +13,7 @@ const MarketingLayout: React.FC<MarketingLayoutProps> = ({ children, title }) =>
   const location = useLocation();
   
   const navItems = [
+    { path: "/marketing", label: "Home", icon: <Home className="mr-2" /> },
     { path: "/marketing/customers", label: "Customers", icon: <Users className="mr-2" /> },
     { path: "/marketing/segments", label: "Segments", icon: <Filter className="mr-2" /> },
     { path: "/marketing/campaigns", label: "Campaigns", icon: <Send className="mr-2" /> },
@@ -24,11 +25,14 @@ const MarketingLayout: React.FC<MarketingLayoutProps> = ({ children, title }) =>
     <div className="min-h-screen flex flex-col">
       <header className="bg-primary text-primary-foreground py-4 px-6 flex justify-between items-center">
         <div className="flex items-center">
-          <h1 className="text-xl font-bold">Marketing Platform</h1>
+          <Link to="/marketing" className="text-xl font-bold">Marketing Platform</Link>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="secondary" size="sm">
             Help
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/">Main Site</Link>
           </Button>
         </div>
       </header>
